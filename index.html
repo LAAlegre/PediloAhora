@@ -36,7 +36,9 @@
     <section id="stock">
         <h2>Stock</h2>
         <input id="buscador" placeholder="Buscar producto..." onkeyup="filtrarStock()">
-        <input id="producto" placeholder="Producto">
+        <select id="producto"></select>
+        <input id="nuevoProducto" placeholder="Nuevo producto">
+        <button onclick="agregarAlCatalogo()">+</button>
         <input id="cantidad" type="number" placeholder="Cantidad">
         <input id="minimo" type="number" placeholder="Stock mínimo">
         <button onclick="limpiarStock()">Resetear Stock</button>

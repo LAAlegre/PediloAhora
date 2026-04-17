@@ -1,6 +1,6 @@
 let stock = JSON.parse(localStorage.getItem("stock")) || [];
 let proveedores = JSON.parse(localStorage.getItem("proveedores")) || [];
-
+let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [];
 // Cambiar secciones
 function mostrarSeccion(seccion) {
     document.querySelectorAll("section").forEach(s => s.style.display = "none");
@@ -13,20 +13,59 @@ function guardarDatos() {
     localStorage.setItem("proveedores", JSON.stringify(proveedores));
 }
 
-// STOCK
-function agregarProducto() {
-    let producto = document.getElementById("producto").value;
-    let cantidad = Number(document.getElementById("cantidad").value);
-    let minimo = Number(document.getElementById("minimo").value);
-    let proveedor = document.getElementById("proveedorSelect").value;
+function agregarAlCatalogo() {
+    let nuevo = document.getElementById("nuevoProducto").value.trim();
 
-    if (!producto) return;
+    if (!nuevo) return;
 
-    stock.push({ producto, cantidad, minimo, proveedor });
-    guardarDatos();
-    mostrarStock();
+    if (!catalogo.includes(nuevo)) {
+        catalogo.push(nuevo);
+        localStorage.setItem("catalogo", JSON.stringify(catalogo));
+        cargarCatalogo();
+    }
+
+    document.getElementById("nuevoProducto").value = "";
 }
 
+function cargarCatalogo() {
+    let select = document.getElementById("producto");
+    select.innerHTML = "";
+
+    catalogo.forEach(prod => {
+        let option = document.createElement("option");
+        option.value = prod;
+        option.textContent = prod;
+        select.appendChild(option);
+    });
+}
+
+// STOCK
+function agregarProducto() {
+    let producto = document.getElementById("producto").value.trim();
+    let cantidad = parseInt(document.getElementById("cantidad").value);
+    let minimo = parseInt(document.getElementById("minimo").value);
+    let proveedor = document.getElementById("proveedorSelect").value;
+
+    if (!producto) {
+        alert("Ingresá un producto");
+        return;
+    }
+
+    // Guardar en catálogo si no existe
+    if (!catalogo.includes(producto)) {
+        catalogo.push(producto);
+        localStorage.setItem("catalogo", JSON.stringify(catalogo));
+    }
+
+    if (isNaN(cantidad)) cantidad = 0;
+    if (isNaN(minimo)) minimo = 0;
+
+    stock.push({ producto, cantidad, minimo, proveedor });
+
+    guardarDatos();
+    mostrarStock();
+    actualizarDashboard();
+}
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
     lista.innerHTML = "";
@@ -40,7 +79,7 @@ function mostrarStock() {
 
         tr.innerHTML = `
       <td>${p.producto}</td>
-      <td>${p.proveedor}</td>
+      <td>${p.proveedor || "Sin proveedor"}</td>
       <td>${p.cantidad}</td>
       <td>${p.minimo}</td>
     `;
@@ -50,14 +89,13 @@ function mostrarStock() {
 }
 
 function limpiarStock() {
-    if (confirm("¿Seguro?")) {
+    if (confirm("¿Seguro que querés borrar todo el stock?")) {
         stock = [];
-        guardarDatos();
+        localStorage.removeItem("stock");
         mostrarStock();
         actualizarDashboard();
     }
 }
-
 // PROVEEDORES
 function agregarProveedor() {
     let nombre = document.getElementById("nombreProv").value;
@@ -163,6 +201,11 @@ function filtrarStock() {
     });
 }
 // Inicializar
-mostrarStock();
-mostrarProveedores();
-actualizarDashboard();
+
+window.onload = function () {
+    mostrarStock();
+    mostrarProveedores();
+    cargarProveedoresSelect();
+    cargarCatalogo();
+    actualizarDashboard();
+};
