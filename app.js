@@ -129,12 +129,7 @@ function cargarCatalogo() {
     let datalist = document.getElementById("productos");
     datalist.innerHTML = "";
 
-    let base = catalogo;
-    let favoritos = obtenerFavoritos();
-
-    let final = [...new Set([...favoritos, ...base])];
-
-    final.forEach(p => {
+    catalogo.forEach(p => {
         let option = document.createElement("option");
         option.value = p;
         datalist.appendChild(option);
@@ -143,77 +138,30 @@ function cargarCatalogo() {
 
 // STOCK
 function agregarProducto() {
-    let producto = document.getElementById("producto").value;
-    let cantidad = Number(document.getElementById("cantidad").value);
-    let minimo = Number(document.getElementById("minimo").value);
+    let producto = document.getElementById("producto").value.trim();
+    let cantidad = parseInt(document.getElementById("cantidad").value);
+    let minimo = parseInt(document.getElementById("minimo").value);
     let proveedor = document.getElementById("proveedorSelect").value;
 
-    if (!producto) return;
+    if (!producto) {
+        alert("Ingresá un producto");
+        return;
+    }
+
+    // Guardar en catálogo si no existe
+    if (!catalogo.includes(producto)) {
+        catalogo.push(producto);
+        localStorage.setItem("catalogo", JSON.stringify(catalogo));
+    }
+
+    if (isNaN(cantidad)) cantidad = 0;
+    if (isNaN(minimo)) minimo = 0;
 
     stock.push({ producto, cantidad, minimo, proveedor });
-
-    // 📊 TRACKING DE USO (NUEVO)
-    let stats = JSON.parse(localStorage.getItem("stats")) || {};
-
-    if (!stats[producto]) {
-        stats[producto] = 0;
-    }
-    stats[producto]++;
-
-    localStorage.setItem("stats", JSON.stringify(stats));
 
     guardarDatos();
     mostrarStock();
     actualizarDashboard();
-    mostrarTopProductos();
-    cargarCatalogo();
-}
-
-//Mostrar top productos
-
-function mostrarTopProductos() {
-    let stats = JSON.parse(localStorage.getItem("stats")) || {};
-    let contenedor = document.getElementById("topProductos");
-
-    contenedor.innerHTML = "<h3>🔥 Top productos</h3>";
-
-    let ordenados = Object.entries(stats)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-
-    ordenados.forEach(([producto, cantidad]) => {
-        let div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `<strong>${producto}</strong><br>${cantidad} usos`;
-        contenedor.appendChild(div);
-    });
-}
-
-//OBTENER FAVORITOS
-
-function obtenerFavoritos() {
-    let stats = JSON.parse(localStorage.getItem("stats")) || {};
-
-    return Object.entries(stats)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10)
-        .map(x => x[0]);
-}
-
-// Guardar en catálogo si no existe
-if (!catalogo.includes(producto)) {
-    catalogo.push(producto);
-    localStorage.setItem("catalogo", JSON.stringify(catalogo));
-}
-
-if (isNaN(cantidad)) cantidad = 0;
-if (isNaN(minimo)) minimo = 0;
-
-stock.push({ producto, cantidad, minimo, proveedor });
-
-guardarDatos();
-mostrarStock();
-actualizarDashboard();
 }
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
@@ -324,33 +272,18 @@ function enviarWhatsApp() {
         }
     });
 
-    for (let proveedor in pedidosPorProveedor) {
-        let mensaje = `📦 Pedido para ${proveedor}\n\n`;
+    let mensaje = "";
 
+    for (let proveedor in pedidosPorProveedor) {
+        mensaje += `📦 ${proveedor}\n`;
         pedidosPorProveedor[proveedor].forEach(prod => {
             mensaje += `- ${prod}\n`;
         });
-
-        let url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-
-        setTimeout(() => {
-            window.open(url, "_blank");
-        }, 500);
+        mensaje += "\n";
     }
-}
 
-let mensaje = "";
-
-for (let proveedor in pedidosPorProveedor) {
-    mensaje += `📦 ${proveedor}\n`;
-    pedidosPorProveedor[proveedor].forEach(prod => {
-        mensaje += `- ${prod}\n`;
-    });
-    mensaje += "\n";
-}
-
-let url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-window.open(url, "_blank");
+    let url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
 }
 
 //DASHBOARD
@@ -382,5 +315,4 @@ window.onload = function () {
     cargarProveedoresSelect();
     cargarCatalogo();
     actualizarDashboard();
-    mostrarTopProductos();
 };
