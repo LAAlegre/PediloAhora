@@ -162,6 +162,7 @@ function agregarProducto() {
     guardarDatos();
     mostrarStock();
     actualizarDashboard();
+    verificarAlertas();
 }
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
@@ -191,6 +192,37 @@ function limpiarStock() {
         localStorage.removeItem("stock");
         mostrarStock();
         actualizarDashboard();
+    }
+}
+
+//VERIFICAR ALERTAS
+function verificarAlertas() {
+    let alertas = stock.filter(p => p.cantidad < p.minimo);
+
+    let contenedor = document.getElementById("alertas");
+    contenedor.innerHTML = "";
+
+    alertas.forEach(p => {
+        let div = document.createElement("div");
+        div.classList.add("alerta");
+
+        div.innerHTML = `⚠️ ${p.producto} bajo stock`;
+
+        contenedor.appendChild(div);
+
+        // 📲 notificación
+        notificarAlerta(p.producto);
+    });
+}
+
+
+function notificarAlerta(producto) {
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "granted") {
+        new Notification("Stock bajo", {
+            body: `${producto} necesita reposición`
+        });
     }
 }
 // PROVEEDORES
@@ -315,4 +347,8 @@ window.onload = function () {
     cargarProveedoresSelect();
     cargarCatalogo();
     actualizarDashboard();
+    verificarAlertas();
+    if ("Notification" in window) {
+        Notification.requestPermission();
+    }
 };
