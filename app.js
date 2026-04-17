@@ -35,7 +35,7 @@ function mostrarStock() {
         let tr = document.createElement("tr");
 
         if (p.cantidad < p.minimo) {
-            tr.style.background = "#fee2e2"; // rojo suave alerta
+            tr.classList.add("alerta");
         }
 
         tr.innerHTML = `
@@ -47,6 +47,15 @@ function mostrarStock() {
 
         lista.appendChild(tr);
     });
+}
+
+function limpiarStock() {
+    if (confirm("¿Seguro?")) {
+        stock = [];
+        guardarDatos();
+        mostrarStock();
+        actualizarDashboard();
+    }
 }
 
 // PROVEEDORES
@@ -132,6 +141,28 @@ function enviarWhatsApp() {
     window.open(url, "_blank");
 }
 
+//DASHBOARD
+
+function actualizarDashboard() {
+    document.getElementById("totalProductos").textContent = stock.length;
+
+    let bajos = stock.filter(p => p.cantidad < p.minimo).length;
+    document.getElementById("bajoStock").textContent = bajos;
+
+    document.getElementById("totalProveedores").textContent = proveedores.length;
+}
+
+function filtrarStock() {
+    let texto = document.getElementById("buscador").value.toLowerCase();
+    let filas = document.querySelectorAll("#listaStock tr");
+
+    filas.forEach(fila => {
+        fila.style.display = fila.textContent.toLowerCase().includes(texto)
+            ? ""
+            : "none";
+    });
+}
 // Inicializar
 mostrarStock();
 mostrarProveedores();
+actualizarDashboard();

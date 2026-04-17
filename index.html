@@ -12,18 +12,34 @@
     <h1>PediloAhora</h1>
 
     <nav>
+
         <button onclick="mostrarSeccion('stock')">Stock</button>
         <button onclick="mostrarSeccion('proveedores')">Proveedores</button>
         <button onclick="mostrarSeccion('pedidos')">Pedidos</button>
     </nav>
+    <div id="dashboard">
+        <div class="card">
+            <h3>Productos</h3>
+            <p id="totalProductos">0</p>
+        </div>
 
+        <div class="card">
+            <h3>Bajo stock</h3>
+            <p id="bajoStock">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Proveedores</h3>
+            <p id="totalProveedores">0</p>
+        </div>
+    </div>
     <section id="stock">
         <h2>Stock</h2>
-
+        <input id="buscador" placeholder="Buscar producto..." onkeyup="filtrarStock()">
         <input id="producto" placeholder="Producto">
         <input id="cantidad" type="number" placeholder="Cantidad">
         <input id="minimo" type="number" placeholder="Stock mínimo">
-
+        <button onclick="limpiarStock()">Resetear Stock</button>
         <select id="proveedorSelect"></select>
 
         <button onclick="agregarProducto()">Agregar</button>
