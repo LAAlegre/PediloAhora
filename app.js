@@ -1,6 +1,26 @@
 let stock = JSON.parse(localStorage.getItem("stock")) || [];
 let proveedores = JSON.parse(localStorage.getItem("proveedores")) || [];
-let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [];
+let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [
+    "Cerveza",
+    "Agua",
+    "Gaseosa",
+    "Harina",
+    "Aceite",
+    "Sal",
+    "Azúcar",
+    "Levadura",
+    "Carne",
+    "Pollo",
+    "Queso",
+    "Tomate",
+    "Lechuga",
+    "Pan",
+    "Helado",
+    "Hielo",
+    "Vasos",
+    "Servilletas",
+    "Detergente"
+];
 // Cambiar secciones
 function mostrarSeccion(seccion) {
     document.querySelectorAll("section").forEach(s => s.style.display = "none");
@@ -28,14 +48,13 @@ function agregarAlCatalogo() {
 }
 
 function cargarCatalogo() {
-    let select = document.getElementById("producto");
-    select.innerHTML = "";
+    let datalist = document.getElementById("productos");
+    datalist.innerHTML = "";
 
-    catalogo.forEach(prod => {
+    catalogo.forEach(p => {
         let option = document.createElement("option");
-        option.value = prod;
-        option.textContent = prod;
-        select.appendChild(option);
+        option.value = p;
+        datalist.appendChild(option);
     });
 }
 
@@ -135,20 +154,30 @@ function generarPedido() {
     let lista = document.getElementById("listaPedido");
     lista.innerHTML = "";
 
-    let pedidosPorProveedor = {};
+    let pedidos = {};
 
     stock.forEach(p => {
         if (p.cantidad < p.minimo) {
-            if (!pedidosPorProveedor[p.proveedor]) {
-                pedidosPorProveedor[p.proveedor] = [];
+            if (!pedidos[p.proveedor]) {
+                pedidos[p.proveedor] = [];
             }
-            pedidosPorProveedor[p.proveedor].push(p.producto);
+            pedidos[p.proveedor].push(p.producto);
         }
     });
 
-    for (let proveedor in pedidosPorProveedor) {
+    let hayPedidos = Object.keys(pedidos).length;
+
+    if (!hayPedidos) {
+        lista.innerHTML = "<li>No hay productos para pedir 👍</li>";
+        return;
+    }
+
+    for (let prov in pedidos) {
         let li = document.createElement("li");
-        li.innerHTML = `<strong>${proveedor}</strong><br>${pedidosPorProveedor[proveedor].join(", ")}`;
+        li.innerHTML = `
+      <strong>${prov}</strong><br>
+      ${pedidos[prov].join(", ")}
+    `;
         lista.appendChild(li);
     }
 }
