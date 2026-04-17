@@ -16,10 +16,13 @@ function guardarDatos() {
 // STOCK
 function agregarProducto() {
     let producto = document.getElementById("producto").value;
-    let cantidad = document.getElementById("cantidad").value;
-    let minimo = document.getElementById("minimo").value;
+    let cantidad = Number(document.getElementById("cantidad").value);
+    let minimo = Number(document.getElementById("minimo").value);
+    let proveedor = document.getElementById("proveedorSelect").value;
 
-    stock.push({ producto, cantidad, minimo });
+    if (!producto) return;
+
+    stock.push({ producto, cantidad, minimo, proveedor });
     guardarDatos();
     mostrarStock();
 }
@@ -30,7 +33,7 @@ function mostrarStock() {
 
     stock.forEach(p => {
         let li = document.createElement("li");
-        li.textContent = `${p.producto} - ${p.cantidad}`;
+        li.textContent = `${p.producto} (${p.proveedor}) - ${p.cantidad}`;
         lista.appendChild(li);
     });
 }
@@ -56,6 +59,19 @@ function mostrarProveedores() {
     });
 }
 
+function cargarProveedoresSelect() {
+    let select = document.getElementById("proveedorSelect");
+    select.innerHTML = "";
+
+    proveedores.forEach(p => {
+        let option = document.createElement("option");
+        option.value = p.nombre;
+        option.textContent = p.nombre;
+        select.appendChild(option);
+    });
+}
+
+
 // PEDIDO AUTOMÁTICO
 function generarPedido() {
     let lista = document.getElementById("listaPedido");
@@ -68,6 +84,19 @@ function generarPedido() {
             lista.appendChild(li);
         }
     });
+}
+
+function enviarWhatsApp() {
+    let mensaje = "Pedido:\n";
+
+    stock.forEach(p => {
+        if (p.cantidad < p.minimo) {
+            mensaje += `- ${p.producto} (${p.proveedor})\n`;
+        }
+    });
+
+    let url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
 }
 
 // Inicializar

@@ -19,10 +19,15 @@
 
     <section id="stock">
         <h2>Stock</h2>
+
         <input id="producto" placeholder="Producto">
         <input id="cantidad" type="number" placeholder="Cantidad">
         <input id="minimo" type="number" placeholder="Stock mínimo">
+
+        <select id="proveedorSelect"></select>
+
         <button onclick="agregarProducto()">Agregar</button>
+
         <ul id="listaStock"></ul>
     </section>
 
@@ -37,6 +42,7 @@
     <section id="pedidos" style="display:none;">
         <h2>Pedido mensual</h2>
         <button onclick="generarPedido()">Generar pedido</button>
+        <button onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
         <ul id="listaPedido"></ul>
     </section>
 
