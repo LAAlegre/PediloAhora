@@ -1,25 +1,103 @@
 let stock = JSON.parse(localStorage.getItem("stock")) || [];
 let proveedores = JSON.parse(localStorage.getItem("proveedores")) || [];
 let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [
-    "Cerveza",
-    "Agua",
-    "Gaseosa",
-    "Harina",
-    "Aceite",
-    "Sal",
+    // 🍺 BEBIDAS
+    "Cerveza Lata",
+    "Cerveza Botella",
+    "Agua sin gas",
+    "Agua con gas",
+    "Gaseosa Cola",
+    "Gaseosa Lima-Limón",
+    "Tónica",
+    "Jugo Naranja",
+
+    // 🥩 COCINA - BASE
+    "Harina 000",
+    "Harina 0000",
+    "Aceite de girasol",
+    "Aceite de oliva",
+    "Sal fina",
+    "Sal gruesa",
     "Azúcar",
+    "Pimienta",
+    "Orégano",
+    "Pimentón",
     "Levadura",
-    "Carne",
-    "Pollo",
-    "Queso",
+
+    // 🥩 CARNES Y FRESCOS
+    "Carne picada",
+    "Bife de chorizo",
+    "Pollo entero",
+    "Milanesa",
+    "Jamón",
+    "Queso cremoso",
+    "Queso mozzarella",
+
+    // 🥬 VERDULERÍA
     "Tomate",
     "Lechuga",
-    "Pan",
-    "Helado",
+    "Cebolla",
+    "Ajo",
+    "Papa",
+    "Zanahoria",
+    "Limón",
+
+    // 🍞 PANADERÍA
+    "Pan de hamburguesa",
+    "Pan de viena",
+    "Pan rallado",
+    "Pan lactal",
+
+    // 🧽 LIMPIEZA (MUY IMPORTANTE)
+    "Lavandina",
+    "Detergente",
+    "Desengrasante",
+    "Desinfectante",
+    "Alcohol 70%",
+    "Esponjas",
+    "Virulana",
+    "Trapo de piso",
+    "Guantes de limpieza",
+    "Bolsa basura grande",
+    "Bolsa basura mediana",
+
+    // 🍽️ CRISTALERÍA / BAR
+    "Vasos pinta",
+    "Vasos chop",
+    "Vasos trago",
+    "Copas vino",
+    "Copas gin tonic",
+    "Jarras cerveza",
+    "Servilletas papel",
+    "Sorbetes",
+
+    // 🍳 COCINA - INSUMOS
+    "Salsa tomate",
+    "Mayonesa",
+    "Mostaza",
+    "Ketchup",
+    "Crema de leche",
+    "Manteca",
+    "Aceitunas",
+    "Pickles",
+
+    // 📦 DESCARTABLES
+    "Papel aluminio",
+    "Film plástico",
+    "Papel cocina",
+    "Envases descartables",
+    "Tapas envases",
+
+    // 🧊 BAR / FREEZER
     "Hielo",
-    "Vasos",
+    "Frutas congeladas",
+    "Pulpa de fruta",
+
+    // 🧾 OTROS
     "Servilletas",
-    "Detergente"
+    "Rollos cocina",
+    "Cajas delivery",
+    "Bolsas delivery"
 ];
 // Cambiar secciones
 function mostrarSeccion(seccion) {
