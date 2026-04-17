@@ -1,18 +1,47 @@
-<section id="proveedores" style="display:none;">
-    <h2>Proveedores</h2>
-    <input id="nombreProv" placeholder="Nombre">
-    <input id="telefonoProv" placeholder="Teléfono">
-    <button onclick="agregarProveedor()">Agregar</button>
-    <ul id="listaProveedores"></ul>
-</section>
+<!DOCTYPE html>
+<html lang="es">
 
-<section id="pedidos" style="display:none;">
-    <h2>Pedido mensual</h2>
-    <button onclick="generarPedido()">Generar pedido</button>
-    <ul id="listaPedido"></ul>
-</section>
+<head>
+    <meta charset="UTF-8">
+    <title>PediloAhora</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-<script src="app.js"></script>
+<body>
+
+    <h1>PediloAhora</h1>
+
+    <nav>
+        <button onclick="mostrarSeccion('stock')">Stock</button>
+        <button onclick="mostrarSeccion('proveedores')">Proveedores</button>
+        <button onclick="mostrarSeccion('pedidos')">Pedidos</button>
+    </nav>
+
+    <section id="stock">
+        <h2>Stock</h2>
+        <input id="producto" placeholder="Producto">
+        <input id="cantidad" type="number" placeholder="Cantidad">
+        <input id="minimo" type="number" placeholder="Stock mínimo">
+        <button onclick="agregarProducto()">Agregar</button>
+        <ul id="listaStock"></ul>
+    </section>
+
+    <section id="proveedores" style="display:none;">
+        <h2>Proveedores</h2>
+        <input id="nombreProv" placeholder="Nombre">
+        <input id="telefonoProv" placeholder="Teléfono">
+        <button onclick="agregarProveedor()">Agregar</button>
+        <ul id="listaProveedores"></ul>
+    </section>
+
+    <section id="pedidos" style="display:none;">
+        <h2>Pedido mensual</h2>
+        <button onclick="generarPedido()">Generar pedido</button>
+        <ul id="listaPedido"></ul>
+    </section>
+
+    <script src="app.js"></script>
+
 </body>
 
 </html>
