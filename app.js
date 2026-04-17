@@ -32,9 +32,20 @@ function mostrarStock() {
     lista.innerHTML = "";
 
     stock.forEach(p => {
-        let li = document.createElement("li");
-        li.textContent = `${p.producto} (${p.proveedor}) - ${p.cantidad}`;
-        lista.appendChild(li);
+        let tr = document.createElement("tr");
+
+        if (p.cantidad < p.minimo) {
+            tr.style.background = "#fee2e2"; // rojo suave alerta
+        }
+
+        tr.innerHTML = `
+      <td>${p.producto}</td>
+      <td>${p.proveedor}</td>
+      <td>${p.cantidad}</td>
+      <td>${p.minimo}</td>
+    `;
+
+        lista.appendChild(tr);
     });
 }
 
@@ -77,23 +88,45 @@ function generarPedido() {
     let lista = document.getElementById("listaPedido");
     lista.innerHTML = "";
 
+    let pedidosPorProveedor = {};
+
     stock.forEach(p => {
         if (p.cantidad < p.minimo) {
-            let li = document.createElement("li");
-            li.textContent = `Comprar ${p.producto}`;
-            lista.appendChild(li);
+            if (!pedidosPorProveedor[p.proveedor]) {
+                pedidosPorProveedor[p.proveedor] = [];
+            }
+            pedidosPorProveedor[p.proveedor].push(p.producto);
         }
     });
+
+    for (let proveedor in pedidosPorProveedor) {
+        let li = document.createElement("li");
+        li.innerHTML = `<strong>${proveedor}</strong><br>${pedidosPorProveedor[proveedor].join(", ")}`;
+        lista.appendChild(li);
+    }
 }
 
 function enviarWhatsApp() {
-    let mensaje = "Pedido:\n";
+    let pedidosPorProveedor = {};
 
     stock.forEach(p => {
         if (p.cantidad < p.minimo) {
-            mensaje += `- ${p.producto} (${p.proveedor})\n`;
+            if (!pedidosPorProveedor[p.proveedor]) {
+                pedidosPorProveedor[p.proveedor] = [];
+            }
+            pedidosPorProveedor[p.proveedor].push(p.producto);
         }
     });
+
+    let mensaje = "";
+
+    for (let proveedor in pedidosPorProveedor) {
+        mensaje += `📦 ${proveedor}\n`;
+        pedidosPorProveedor[proveedor].forEach(prod => {
+            mensaje += `- ${prod}\n`;
+        });
+        mensaje += "\n";
+    }
 
     let url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
     window.open(url, "_blank");
