@@ -127,7 +127,19 @@ function agregarAlCatalogo() {
 
 function cargarCatalogo() {
     let datalist = document.getElementById("productos");
+
+    if (!datalist) return;
+
     datalist.innerHTML = "";
+
+    let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [];
+
+    if (catalogo.length === 0) {
+        let option = document.createElement("option");
+        option.value = "Agregá productos primero";
+        datalist.appendChild(option);
+        return;
+    }
 
     catalogo.forEach(p => {
         let option = document.createElement("option");
@@ -248,7 +260,17 @@ function mostrarProveedores() {
 
 function cargarProveedoresSelect() {
     let select = document.getElementById("proveedorSelect");
+
+    if (!select) return;
+
     select.innerHTML = "";
+
+    if (!proveedores || proveedores.length === 0) {
+        let option = document.createElement("option");
+        option.textContent = "No hay proveedores";
+        select.appendChild(option);
+        return;
+    }
 
     proveedores.forEach(p => {
         let option = document.createElement("option");
@@ -318,6 +340,23 @@ function enviarWhatsApp() {
     window.open(url, "_blank");
 }
 
+window.agregarAlCatalogo = function () {
+    let nuevo = document.getElementById("nuevoProducto").value.trim();
+
+    if (!nuevo) return;
+
+    let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [];
+
+    if (!catalogo.includes(nuevo)) {
+        catalogo.push(nuevo);
+        localStorage.setItem("catalogo", JSON.stringify(catalogo));
+    }
+
+    document.getElementById("nuevoProducto").value = "";
+
+    cargarCatalogo();
+};
+
 //DASHBOARD
 
 function actualizarDashboard() {
@@ -341,14 +380,19 @@ function filtrarStock() {
 }
 // Inicializar
 
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", function () {
     mostrarStock();
     mostrarProveedores();
     cargarProveedoresSelect();
     cargarCatalogo();
     actualizarDashboard();
     verificarAlertas();
-    if ("Notification" in window) {
-        Notification.requestPermission();
-    }
-};
+    panelEmergencia();
+});
+
+// 4. 🔥 ESTO VA AL FINAL (IMPORTANTE)
+window.agregarProducto = agregarProducto;
+window.generarPedido = generarPedido;
+window.mostrarStock = mostrarStock;
+window.cargarCatalogo = cargarCatalogo;
+window.cargarProveedoresSelect = cargarProveedoresSelect;
