@@ -99,6 +99,12 @@ let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [
     "Cajas delivery",
     "Bolsas delivery"
 ];
+
+const supabaseClient = supabase.createClient(
+    "https://kxjndtiaapclghklhszk.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4am5kdGlhYXBjbGdoa2xoc3prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NzI1MDEsImV4cCI6MjA5MjA0ODUwMX0._ZxvLwhs3tA7rHIeaMq67MAUZESZiLYDdpFbedMv8X4"
+);
+
 // Cambiar secciones
 function mostrarSeccion(seccion) {
     document.querySelectorAll("section").forEach(s => s.style.display = "none");
@@ -314,6 +320,38 @@ function generarPedido() {
     }
 }
 
+async function guardarPedido(nombre, producto) {
+    const { data, error } = await supabaseClient
+        .from("Pedidos")
+        .insert([{ nombre, productos: producto }])
+
+    if (error) {
+        alert("Error al guardar ❌");
+        console.error(error);
+    } else {
+        alert("Pedido guardado ✅");
+        console.log(data);
+    }
+}
+
+
+async function obtenerPedidos() {
+    const { data, error } = await supabaseClient
+        .from("pedidos")
+        .select("*");
+
+    console.log(data);
+}
+
+function enviar() {
+    const nombre = document.getElementById("nombre").value;
+    const producto = document.getElementById("productoPedido").value;
+
+    guardarPedido(nombre, producto);
+}
+
+
+
 function enviarWhatsApp() {
     let pedidosPorProveedor = {};
 
@@ -387,7 +425,6 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarCatalogo();
     actualizarDashboard();
     verificarAlertas();
-    panelEmergencia();
 });
 
 // 4. 🔥 ESTO VA AL FINAL (IMPORTANTE)
