@@ -155,7 +155,7 @@ function cargarCatalogo() {
 }
 
 // STOCK
-function agregarProducto() {
+async function agregarProducto() {
     let producto = document.getElementById("producto").value.trim();
     let cantidad = parseInt(document.getElementById("cantidad").value);
     let minimo = parseInt(document.getElementById("minimo").value);
@@ -166,21 +166,38 @@ function agregarProducto() {
         return;
     }
 
-    // Guardar en catálogo si no existe
-    if (!catalogo.includes(producto)) {
-        catalogo.push(producto);
-        localStorage.setItem("catalogo", JSON.stringify(catalogo));
-    }
-
     if (isNaN(cantidad)) cantidad = 0;
     if (isNaN(minimo)) minimo = 0;
 
-    stock.push({ producto, cantidad, minimo, proveedor });
+    const { data, error } = await supabaseClient
+        .from("stock")
+        .insert([
+            { producto, cantidad, minimo, proveedor }
+        ]);
 
-    guardarDatos();
-    mostrarStock();
-    actualizarDashboard();
-    verificarAlertas();
+    if (error) {
+        alert("Error al guardar ❌");
+        console.error(error);
+    } else {
+        alert("Producto guardado en la nube ✅");
+        console.log(data);
+    }
+}
+// Guardar en catálogo si no existe
+if (!catalogo.includes(producto)) {
+    catalogo.push(producto);
+    localStorage.setItem("catalogo", JSON.stringify(catalogo));
+}
+
+if (isNaN(cantidad)) cantidad = 0;
+if (isNaN(minimo)) minimo = 0;
+
+stock.push({ producto, cantidad, minimo, proveedor });
+
+guardarDatos();
+mostrarStock();
+actualizarDashboard();
+verificarAlertas();
 }
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
