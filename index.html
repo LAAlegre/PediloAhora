@@ -67,6 +67,9 @@
         <option value="Descartables">Descartables</option>
         <option value="Cocina">Cocina</option>
         <option value="Freezer">Freezer</option>
+        <input id="nombre" placeholder="Nombre">
+        <input id="productoPedido" placeholder="Producto">
+        <button onclick="enviar()">Enviar</button>
     </select>
 
     <section id="proveedores" style="display:none;">
@@ -84,9 +87,6 @@
         <ul id="listaPedido"></ul>
     </section>
 
-    <input id="nombre" placeholder="Nombre">
-    <input id="productoPedido" placeholder="Producto">
-    <button onclick="enviar()">Enviar</button>
 
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
