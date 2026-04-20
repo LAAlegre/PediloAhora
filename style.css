@@ -140,48 +140,65 @@ tr:hover {
 
 @media (max-width: 768px) {
 
-    body {
-        padding: 10px;
-    }
-
-    nav {
+    .form-stock {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
     }
 
-    nav button {
-        width: 90%;
-        font-size: 16px;
-    }
-
-    section {
-        width: 95%;
-        padding: 15px;
-    }
-
-    input,
-    select,
-    button {
-        min-height: 45px;
-        font-size: 16px;
-        touch-action: manipulation;
-    }
-
-    table {
+    .form-stock input,
+    .form-stock select,
+    .form-stock button {
         width: 100%;
-        border-collapse: collapse;
-        overflow-x: auto;
-        display: block;
     }
+}
 
-    .card {
-        width: 90%;
-        margin: 10px auto;
-    }
+
+input,
+select,
+button {
+    min-height: 45px;
+    font-size: 16px;
+    touch-action: manipulation;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+}
+
+.card {
+    width: 90%;
+    margin: 10px auto;
 }
 
 input,
 select {
     min-height: 40px;
     border-radius: 10px;
+}
+
+#stock input,
+#stock select,
+#stock button {
+    margin: 5px;
+}
+
+#stock {
+    display: flex;
+    flex-direction: column;
+}
+
+#stock>input,
+#stock>select,
+#stock>button {
+    max-width: 200px;
+}
+
+.form-stock {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
