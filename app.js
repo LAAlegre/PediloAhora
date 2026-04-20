@@ -186,22 +186,37 @@ function mostrarStock() {
     let lista = document.getElementById("listaStock");
     lista.innerHTML = "";
 
+    let categorias = {};
+
     stock.forEach(p => {
-        let tr = document.createElement("tr");
-
-        if (p.cantidad < p.minimo) {
-            tr.classList.add("alerta");
+        if (!categorias[p.categoria]) {
+            categorias[p.categoria] = [];
         }
-
-        tr.innerHTML = `
-      <td>${p.producto}</td>
-      <td>${p.proveedor || "Sin proveedor"}</td>
-      <td>${p.cantidad}</td>
-      <td>${p.minimo}</td>
-    `;
-
-        lista.appendChild(tr);
+        categorias[p.categoria].push(p);
     });
+
+    for (let categoria in categorias) {
+        let titulo = document.createElement("tr");
+        titulo.innerHTML = `<td colspan="4"><strong>${categoria}</strong></td>`;
+        lista.appendChild(titulo);
+
+        categorias[categoria].forEach(p => {
+            let tr = document.createElement("tr");
+
+            if (p.cantidad < p.minimo) {
+                tr.classList.add("alerta");
+            }
+
+            tr.innerHTML = `
+                <td>${p.producto}</td>
+                <td>${p.proveedor || "Sin proveedor"}</td>
+                <td>${p.cantidad}</td>
+                <td>${p.minimo}</td>
+            `;
+
+            lista.appendChild(tr);
+        });
+    }
 }
 
 function limpiarStock() {
@@ -212,6 +227,22 @@ function limpiarStock() {
         actualizarDashboard();
     }
 }
+
+async function guardarStock(producto, cantidad, minimo, proveedor, categoria) {
+    const { data, error } = await supabaseClient
+        .from("stock")
+        .insert([
+            { producto, cantidad, minimo, proveedor, categoria }
+        ]);
+
+    if (error) {
+        alert("Error al guardar stock ❌");
+        console.error(error);
+    } else {
+        console.log("Stock guardado en nube ✅");
+    }
+}
+
 
 //VERIFICAR ALERTAS
 function verificarAlertas() {
