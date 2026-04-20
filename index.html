@@ -38,8 +38,10 @@
     </div>
     <div class="form-stock">
         <input list="productos" id="producto" placeholder="Buscar producto...">
+        <button onclick="agregarAlCatalogo()">+</button>
         <input id="cantidad" type="number" placeholder="Cantidad">
         <input id="minimo" type="number" placeholder="Stock mínimo">
+        <select id="categoria"></select>
         <select id="proveedorSelect"></select>
         <button onclick="agregarProducto()">Agregar</button>
     </div>
