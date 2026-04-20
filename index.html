@@ -36,29 +36,28 @@
         </div>
         <div id="alertas"></div>
     </div>
-    <section id="stock">
-        <h2>Stock</h2>
+    <div class="form-stock">
         <input list="productos" id="producto" placeholder="Buscar producto...">
-        <datalist id="productos"></datalist>
         <button onclick="agregarAlCatalogo()">+</button>
         <input id="cantidad" type="number" placeholder="Cantidad">
         <input id="minimo" type="number" placeholder="Stock mínimo">
+        <select id="categoria"></select>
         <select id="proveedorSelect"></select>
         <button onclick="agregarProducto()">Agregar</button>
+    </div>
 
-        <button onclick="limpiarStock()">Resetear Stock</button>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Proveedor</th>
-                    <th>Cantidad</th>
-                    <th>Mínimo</th>
-                </tr>
-            </thead>
-            <tbody id="listaStock"></tbody>
-        </table>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Proveedor</th>
+                <th>Cantidad</th>
+                <th>Mínimo</th>
+            </tr>
+        </thead>
+        <tbody id="listaStock"></tbody>
+    </table>
     </section>
 
     <select id="categoria">
@@ -68,6 +67,9 @@
         <option value="Descartables">Descartables</option>
         <option value="Cocina">Cocina</option>
         <option value="Freezer">Freezer</option>
+        <input id="nombre" placeholder="Nombre">
+        <input id="productoPedido" placeholder="Producto">
+        <button onclick="enviar()">Enviar</button>
     </select>
 
     <section id="proveedores" style="display:none;">
@@ -85,9 +87,6 @@
         <ul id="listaPedido"></ul>
     </section>
 
-    <input id="nombre" placeholder="Nombre">
-    <input id="productoPedido" placeholder="Producto">
-    <button onclick="enviar()">Enviar</button>
 
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
