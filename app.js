@@ -177,7 +177,24 @@ function agregarProducto() {
     }
 
     // 🔥 guardar en SUPABASE
-    guardarStock(producto, cantidad, minimo, proveedor);
+    async function guardarStock(producto, cantidad, minimo, proveedor) {
+        const { data, error } = await supabaseClient
+            .from("stock")
+            .insert([
+                { producto, cantidad, minimo, proveedor }
+            ]);
+
+        if (error) {
+            mostrarMensaje("Error al guardar ❌", "error");
+            console.error(error);
+        } else {
+            mostrarMensaje("Stock guardado en la nube ✅");
+
+            // 🔥 recargar desde base
+            cargarStockDesdeDB();
+        }
+    }
+
 
     // 🔥 guardar local (para UI)
     stock.push({ producto, cantidad, minimo, proveedor });
@@ -292,6 +309,22 @@ function mostrarProveedores() {
     });
 }
 
+async function cargarStockDesdeDB() {
+    const { data, error } = await supabaseClient
+        .from("stock")
+        .select("*");
+
+    if (error) {
+        console.error("Error cargando stock:", error);
+        return;
+    }
+
+    stock = data; // 🔥 reemplaza el array local
+    mostrarStock();
+    actualizarDashboard();
+}
+
+
 function cargarProveedoresSelect() {
     let select = document.getElementById("proveedorSelect");
 
@@ -398,13 +431,15 @@ function filtrarStock() {
 // Inicializar
 
 document.addEventListener("DOMContentLoaded", function () {
-    mostrarStock();
+    cargarStockDesdeDB(); // 🔥 IMPORTANTE
+
     mostrarProveedores();
     cargarProveedoresSelect();
     cargarCatalogo();
     actualizarDashboard();
     verificarAlertas();
 });
+
 
 // 4. 🔥 ESTO VA AL FINAL (IMPORTANTE)
 window.agregarProducto = agregarProducto;
