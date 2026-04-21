@@ -348,38 +348,6 @@ function generarPedido() {
     }
 }
 
-async function guardarPedido(nombre, producto) {
-    const { data, error } = await supabaseClient
-        .from("Pedidos")
-        .insert([{ nombre, productos: producto }])
-
-    if (error) {
-        alert("Error al guardar ❌");
-        console.error(error);
-    } else {
-        alert("Pedido guardado ✅");
-        console.log(data);
-    }
-}
-
-
-async function obtenerPedidos() {
-    const { data, error } = await supabaseClient
-        .from("pedidos")
-        .select("*");
-
-    console.log(data);
-}
-
-function enviar() {
-    const nombre = document.getElementById("nombre").value;
-    const producto = document.getElementById("productoPedido").value;
-
-    guardarPedido(nombre, producto);
-}
-
-
-
 function enviarWhatsApp() {
     let pedidosPorProveedor = {};
 
