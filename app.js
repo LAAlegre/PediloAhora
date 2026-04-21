@@ -184,6 +184,8 @@ function agregarProducto() {
 // 🔥 guardar en SUPABASE
 
 async function guardarStock(producto, cantidad, minimo, proveedor) {
+    console.log("🚀 Enviando:", { producto, cantidad, minimo, proveedor });
+
     const { data, error } = await supabaseClient
         .from("stock")
         .insert([
@@ -191,25 +193,21 @@ async function guardarStock(producto, cantidad, minimo, proveedor) {
         ]);
 
     if (error) {
+        console.error("❌ ERROR:", error);
         mostrarMensaje("Error al guardar ❌", "error");
-        console.error(error);
         return;
     }
 
+    console.log("✅ Guardado:", data);
     mostrarMensaje("Stock guardado en la nube ✅");
 
-    // 🔥 recargar desde base (IMPORTANTE)
-    cargarStockDesdeDB();
+    // 🔥 RECARGA DESDE SUPABASE
+    await cargarStockDesdeDB();
 }
+
 
 // 🔥 guardar local (para UI)
 //stock.push({ producto, cantidad, minimo, proveedor });
-
-guardarDatos();
-mostrarStock();
-actualizarDashboard();
-verificarAlertas();
-
 
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
