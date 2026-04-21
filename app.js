@@ -388,23 +388,6 @@ function enviarWhatsApp() {
     window.open(url, "_blank");
 }
 
-window.agregarAlCatalogo = function () {
-    let nuevo = document.getElementById("nuevoProducto").value.trim();
-
-    if (!nuevo) return;
-
-    let catalogo = JSON.parse(localStorage.getItem("catalogo")) || [];
-
-    if (!catalogo.includes(nuevo)) {
-        catalogo.push(nuevo);
-        localStorage.setItem("catalogo", JSON.stringify(catalogo));
-    }
-
-    document.getElementById("nuevoProducto").value = "";
-
-    cargarCatalogo();
-};
-
 //DASHBOARD
 
 function actualizarDashboard() {
