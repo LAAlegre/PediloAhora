@@ -169,41 +169,47 @@ function agregarProducto() {
     if (isNaN(cantidad)) cantidad = 0;
     if (isNaN(minimo)) minimo = 0;
 
-    // 🔥 agregar al catálogo automáticamente
+    // catálogo
     if (!catalogo.includes(producto)) {
         catalogo.push(producto);
         localStorage.setItem("catalogo", JSON.stringify(catalogo));
         cargarCatalogo();
     }
 
-    // 🔥 guardar en SUPABASE
-    async function guardarStock(producto, cantidad, minimo, proveedor) {
-        const { data, error } = await supabaseClient
-            .from("stock")
-            .insert([
-                { producto, cantidad, minimo, proveedor }
-            ]);
+    // 🔥 ACA ESTÁ LA CLAVE
+    guardarStock(producto, cantidad, minimo, proveedor);
+}
 
-        if (error) {
-            mostrarMensaje("Error al guardar ❌", "error");
-            console.error(error);
-        } else {
-            mostrarMensaje("Stock guardado en la nube ✅");
 
-            // 🔥 recargar desde base
-            cargarStockDesdeDB();
-        }
+// 🔥 guardar en SUPABASE
+
+async function guardarStock(producto, cantidad, minimo, proveedor) {
+    const { data, error } = await supabaseClient
+        .from("stock")
+        .insert([
+            { producto, cantidad, minimo, proveedor }
+        ]);
+
+    if (error) {
+        mostrarMensaje("Error al guardar ❌", "error");
+        console.error(error);
+        return;
     }
 
+    mostrarMensaje("Stock guardado en la nube ✅");
 
-    // 🔥 guardar local (para UI)
-    stock.push({ producto, cantidad, minimo, proveedor });
-
-    guardarDatos();
-    mostrarStock();
-    actualizarDashboard();
-    verificarAlertas();
+    // 🔥 recargar desde base (IMPORTANTE)
+    cargarStockDesdeDB();
 }
+
+// 🔥 guardar local (para UI)
+//stock.push({ producto, cantidad, minimo, proveedor });
+
+guardarDatos();
+mostrarStock();
+actualizarDashboard();
+verificarAlertas();
+
 
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
