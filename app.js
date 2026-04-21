@@ -155,7 +155,7 @@ function cargarCatalogo() {
 }
 
 // STOCK
-async function agregarProducto() {
+function agregarProducto() {
     let producto = document.getElementById("producto").value.trim();
     let cantidad = parseInt(document.getElementById("cantidad").value);
     let minimo = parseInt(document.getElementById("minimo").value);
@@ -166,23 +166,16 @@ async function agregarProducto() {
         return;
     }
 
-    if (isNaN(cantidad)) cantidad = 0;
-    if (isNaN(minimo)) minimo = 0;
-
-    const { data, error } = await supabaseClient
-        .from("stock")
-        .insert([
-            { producto, cantidad, minimo, proveedor }
-        ]);
-
-    if (error) {
-        alert("Error al guardar ❌");
-        console.error(error);
-    } else {
-        alert("Producto guardado en la nube ✅");
-        console.log(data);
+    // 🔥 AUTO agrega al catálogo
+    if (!catalogo.includes(producto)) {
+        catalogo.push(producto);
+        localStorage.setItem("catalogo", JSON.stringify(catalogo));
+        cargarCatalogo();
     }
+
+    guardarStock(producto, cantidad, minimo, proveedor);
 }
+
 // Guardar en catálogo si no existe
 if (!catalogo.includes(producto)) {
     catalogo.push(producto);
