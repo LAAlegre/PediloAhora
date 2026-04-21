@@ -166,31 +166,27 @@ function agregarProducto() {
         return;
     }
 
-    // 🔥 AUTO agrega al catálogo
+    if (isNaN(cantidad)) cantidad = 0;
+    if (isNaN(minimo)) minimo = 0;
+
+    // 🔥 agregar al catálogo automáticamente
     if (!catalogo.includes(producto)) {
         catalogo.push(producto);
         localStorage.setItem("catalogo", JSON.stringify(catalogo));
         cargarCatalogo();
     }
 
+    // 🔥 guardar en SUPABASE
     guardarStock(producto, cantidad, minimo, proveedor);
+
+    // 🔥 guardar local (para UI)
+    stock.push({ producto, cantidad, minimo, proveedor });
+
+    guardarDatos();
+    mostrarStock();
+    actualizarDashboard();
+    verificarAlertas();
 }
-
-// Guardar en catálogo si no existe
-if (!catalogo.includes(producto)) {
-    catalogo.push(producto);
-    localStorage.setItem("catalogo", JSON.stringify(catalogo));
-}
-
-if (isNaN(cantidad)) cantidad = 0;
-if (isNaN(minimo)) minimo = 0;
-
-stock.push({ producto, cantidad, minimo, proveedor });
-
-guardarDatos();
-mostrarStock();
-actualizarDashboard();
-verificarAlertas();
 
 function mostrarStock() {
     let lista = document.getElementById("listaStock");
@@ -224,6 +220,28 @@ function limpiarStock() {
 }
 
 //VERIFICAR ALERTAS
+
+function mostrarMensaje(texto, tipo = "ok") {
+    let div = document.getElementById("mensaje");
+
+    div.textContent = texto;
+    div.style.padding = "10px";
+    div.style.margin = "10px 0";
+    div.style.borderRadius = "8px";
+
+    if (tipo === "ok") {
+        div.style.background = "rgba(34,197,94,0.2)";
+        div.style.color = "#22c55e";
+    } else {
+        div.style.background = "rgba(239,68,68,0.2)";
+        div.style.color = "#ef4444";
+    }
+
+    setTimeout(() => {
+        div.textContent = "";
+    }, 3000);
+}
+
 function verificarAlertas() {
     let alertas = stock.filter(p => p.cantidad < p.minimo);
 
